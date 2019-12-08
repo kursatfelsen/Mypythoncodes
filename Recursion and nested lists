@@ -1,0 +1,15 @@
+"""Write a recursive function named "branch" that takes as arguments a list of indices and a nested list structure. It should return the item indexed by the first argument. It works like "[]" operator is applied multiple times to the second list.
+
+Sample Run:
+
+>>> branch([2], [['a', 'b'], ['c', 'd'], ['e', 'f'], ['g', 'h']]) 
+['e', 'f']
+>>> branch([2, 1], [['a', 'b'], ['c', 'd'], ['e', 'f'], ['g', 'h']]) 
+'f' 
+>>> branch([1, 2, 0, 1], [['a', 'b'], [['c', 'd'], ['e', 'f'], [['g', 'h'], ['i', 'j']], 'k'], ['l', 'm']])
+'h'
+"""
+def branch(count,items):
+    if len(count)==1:
+        return items[count[0]]
+    return branch(count[1:],items[count[0]])
