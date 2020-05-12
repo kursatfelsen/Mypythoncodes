@@ -11,8 +11,48 @@ def print_sudoku(sudoku):
             print(str(sudoku[i][j])+" ",end=(" "))
         print("\n")
 
-#Returns a boolean value to decide if there is same value in inner square
 
+def innervalues_help(sudoku,i,j):
+    innerlist=[]
+    k=-1
+    l=-1
+    while(k<2):
+        while(l<2):
+            if(sudoku[i+k][j+l]!=0):
+                #BURADAN 0 LARIN SAYISINI ÇIKARABİLİRSİN BU DA İŞİNE YARAYABİLİR
+                innerlist.append(sudoku[i+k][j+l])
+            l+=1
+        k+=1
+        l=-1
+    if len(innerlist)!=0:
+        innerlist = list(set(innerlist))
+    return innerlist
+
+def innervalues(sudoku,i,j):
+    innerlist=[]
+    if(i<=2):
+        if(j<=2):
+            return innervalues_help(sudoku,1,1)
+        elif(j>=6):
+            return innervalues_help(sudoku,1,7)
+        else:
+            return innervalues_help(sudoku,1,4)
+    elif(i>=6):
+        if(j<=2):
+            return innervalues_help(sudoku,7,1)
+        elif(j>=6):
+            return innervalues_help(sudoku,7,7)
+        else:
+            return innervalues_help(sudoku,7,4)
+    else:
+        if(j<=2):
+            return innervalues_help(sudoku,4,1)
+        elif(j>=6):
+            return innervalues_help(sudoku,4,7)
+        else:
+            return innervalues_help(sudoku,4,4)
+
+#Returns a boolean value to decide if there is same value in inner square
 def look_for_inner_help(sudoku,i,j,value):
     k=-1
     l=-1
@@ -59,6 +99,24 @@ def look_for_inner(sudoku,i,j,posvar):
             if(look_for_inner_help(sudoku,4,4,posvar)):
                 isthere=False
     return isthere
+
+def samecolumn_values(sudoku,i,j):
+    liste=[]
+    for x in range(0,9):
+        if sudoku[i][x]!=0:
+            liste.append(sudoku[i][x])
+    liste.sort()
+    return liste
+
+def sameline_values(sudoku,i,j):
+    liste = []
+    for y in range(0,9):
+        if sudoku[y][j]!=0:
+            liste.append(sudoku[y][j])
+    liste.sort()
+    return liste
+
+
 
 def look_for_samelineandsamecolumn(sudoku,i,j,posvar):
     for x in range(0,9):
@@ -156,5 +214,37 @@ while(iscont):
                     if(look_for_inner(sudoku,i,j,x) and look_for_samelineandsamecolumn(sudoku,i,j,x) and (look_for_otherlines(sudoku,i,j,x) or look_for_othercolumns(sudoku,i,j,x)) ):
                         sudoku[i][j]=x
                         iscont=True
+                        break
+iscont=True
+while(iscont):
+    iscont = False
+    for i in range(0, 9):
+        for j in range(0, 9):
+            liste1 = innervalues(sudoku,i,j)
+            liste1.sort()
+            if (sudoku[i][j] == 0) and (len(liste1) == 8):
+                iscont = True
+                for x in range(1, 10):
+                    if x != liste1[x-1]:
+                        sudoku[i][j] = x
+                        break
+iscont=True
+while(iscont):
+    iscont = False
+    for i in range(0, 9):
+        for j in range(0, 9):
+            liste1 = samecolumn_values(sudoku,i,j)
+            liste2 = sameline_values(sudoku, i, j)
+            if (sudoku[i][j] == 0) and (len(liste1) == 8):
+                iscont = True
+                for x in range(1, 10):
+                    if x != liste1[x-1]:
+                        sudoku[i][j] = x
+                        break
+            elif (sudoku[i][j] == 0) and (len(liste2) == 8):
+                iscont=True
+                for x in range(1, 10):
+                    if x != liste1[x-1]:
+                        sudoku[i][j] = x
                         break
 print_sudoku(sudoku)
