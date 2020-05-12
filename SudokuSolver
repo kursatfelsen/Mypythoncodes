@@ -12,20 +12,18 @@ def print_sudoku(sudoku):
         print("\n")
 
 #Returns a boolean value to decide if there is same value in inner square
+
 def look_for_inner_help(sudoku,i,j,value):
     k=-1
     l=-1
-    isthere=False
     while(k<2):
         while(l<2):
             if(sudoku[i+k][j+l]==value):
-                isthere=True
-                k=3
-                l=3
+                return True
             l+=1
         k+=1
         l=-1
-    return isthere
+    return False
 
 #Looks for a possible variable and says is there a same value or not
 def look_for_inner(sudoku,i,j,posvar):
@@ -34,7 +32,7 @@ def look_for_inner(sudoku,i,j,posvar):
         if(j<=2):
             if(look_for_inner_help(sudoku,1,1,posvar)):
                 isthere=False
-        if(j>=6):
+        elif(j>=6):
             if(look_for_inner_help(sudoku,1,7,posvar)):
                 isthere=False
         else:
@@ -44,7 +42,7 @@ def look_for_inner(sudoku,i,j,posvar):
         if(j<=2):
             if(look_for_inner_help(sudoku,7,1,posvar)):
                 isthere=False
-        if(j>=6):
+        elif(j>=6):
             if(look_for_inner_help(sudoku,7,7,posvar)):
                 isthere=False
         else:
@@ -54,7 +52,7 @@ def look_for_inner(sudoku,i,j,posvar):
         if(j<=2):
             if(look_for_inner_help(sudoku,4,1,posvar)):
                 isthere=False
-        if(j>=6):
+        elif(j>=6):
             if(look_for_inner_help(sudoku,4,7,posvar)):
                 isthere=False
         else:
@@ -80,7 +78,7 @@ def look_for_otherlines(sudoku,i,j,posvar):
                 isthere1=True
                 break
         for y in range(0,9):
-            if(sudoku[i+2][x]==posvar):
+            if(sudoku[i+2][y]==posvar):
                 isthere2=True
                 break
         if(isthere1 and isthere2):
@@ -91,7 +89,7 @@ def look_for_otherlines(sudoku,i,j,posvar):
                 isthere1=True
                 break
         for y in range(0,9):
-            if(sudoku[i+1][x]==posvar):
+            if(sudoku[i+1][y]==posvar):
                 isthere2=True
                 break
         if(isthere1 and isthere2):
@@ -102,7 +100,7 @@ def look_for_otherlines(sudoku,i,j,posvar):
                 isthere1=True
                 break
         for y in range(0,9):
-            if(sudoku[i-2][x]==posvar):
+            if(sudoku[i-2][y]==posvar):
                 isthere2=True
                 break
         if(isthere1 and isthere2):
@@ -155,10 +153,8 @@ while(iscont):
         for j in range(0,9):
             if(sudoku[i][j]==0):
                 for x in range(1,10):
-                    if(look_for_inner(sudoku,i,j,x) and look_for_samelineandsamecolumn(sudoku,i,j,x) \
-                        and look_for_otherlines(sudoku,i,j,x) and look_for_othercolumns(sudoku,i,j,x) ):
+                    if(look_for_inner(sudoku,i,j,x) and look_for_samelineandsamecolumn(sudoku,i,j,x) and (look_for_otherlines(sudoku,i,j,x) or look_for_othercolumns(sudoku,i,j,x)) ):
                         sudoku[i][j]=x
                         iscont=True
                         break
-                iscont=True
 print_sudoku(sudoku)
